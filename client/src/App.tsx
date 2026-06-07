@@ -76,6 +76,13 @@ const App: React.FC = () => {
     socketRef.current?.send(JSON.stringify({ type: 'RESTART_GAME' }));
   };
 
+  const updateSettings = (settings: any) => {
+    socketRef.current?.send(JSON.stringify({
+      type: 'UPDATE_SETTINGS',
+      payload: { settings }
+    }));
+  };
+
   if (!gameState) {
     return <Home onJoin={(roomId, name, char, color) => connect(roomId, name, char, color, false)} 
                  onCreate={(name, char, color) => connect('', name, char, color, true)} />;
@@ -86,7 +93,7 @@ const App: React.FC = () => {
   return (
     <div className="min-h-screen bg-slate-900 text-white font-sans p-4">
       {gameState.phase === 'lobby' && (
-        <Lobby gameState={gameState} me={me} onStart={startGame} />
+        <Lobby gameState={gameState} me={me} onStart={startGame} onUpdateSettings={updateSettings} />
       )}
       {gameState.phase === 'discussion' && (
         <Game gameState={gameState} me={me} />

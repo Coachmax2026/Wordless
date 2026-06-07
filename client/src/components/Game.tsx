@@ -27,7 +27,7 @@ const Game: React.FC<GameProps> = ({ gameState, me }) => {
         <div className="h-1 bg-slate-700 rounded-full mb-6">
           <div 
             className="h-full bg-purple-500 rounded-full transition-all duration-1000" 
-            style={{ width: `${(gameState.timer / 60) * 100}%` }}
+            style={{ width: `${(gameState.timer / gameState.gameSettings.discussionTime) * 100}%` }}
           />
         </div>
 

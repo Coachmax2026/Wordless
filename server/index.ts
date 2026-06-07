@@ -108,7 +108,11 @@ wss.on('connection', (ws: any) => {
             isImposter: false,
             score: 0
           }],
-          timer: 0
+          timer: 0,
+          gameSettings: {
+            discussionTime: 60,
+            votingTime: 30
+          }
         };
         
         rooms.set(roomId, newRoom);
@@ -160,6 +164,18 @@ wss.on('connection', (ws: any) => {
         }
         break;
       }
+
+      case 'UPDATE_SETTINGS': {
+        const room = rooms.get(ws.roomId);
+        if (room && room.players.find(p => p.id === ws.playerId)?.isHost) {
+          room.gameSettings = {
+            ...room.gameSettings,
+            ...payload.settings
+          };
+          sendGameState(ws.roomId);
+        }
+        break;
+      }
     }
   });
 
@@ -202,7 +218,7 @@ function startGame(roomId: string) {
   });
 
   room.phase = 'discussion';
-  room.timer = 60; // 60 seconds for discussion
+  room.timer = room.gameSettings.discussionTime;
   sendGameState(roomId);
 
   const interval = setInterval(() => {
@@ -215,7 +231,7 @@ function startGame(roomId: string) {
     r.timer--;
     if (r.timer <= 0) {
       r.phase = 'voting';
-      r.timer = 30; // 30 seconds for voting
+      r.timer = r.gameSettings.votingTime;
       sendGameState(roomId);
       clearInterval(interval);
       startVotingTimer(roomId);

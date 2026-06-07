@@ -19,4 +19,8 @@ export interface GameState {
   category?: string;
   timer: number;
   winner?: 'players' | 'imposter';
+  gameSettings: {
+    discussionTime: number;
+    votingTime: number;
+  };
 }

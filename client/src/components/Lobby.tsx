@@ -5,9 +5,18 @@ interface LobbyProps {
   gameState: GameState;
   me?: Player;
   onStart: () => void;
+  onUpdateSettings: (settings: any) => void;
 }
 
-const Lobby: React.FC<LobbyProps> = ({ gameState, me, onStart }) => {
+const Lobby: React.FC<LobbyProps> = ({ gameState, me, onStart, onUpdateSettings }) => {
+  const DISCUSSION_TIMES = [30, 60, 90, 120, 180, 300];
+  const VOTING_TIMES = [15, 30, 45, 60];
+
+  const formatTime = (seconds: number) => {
+    if (seconds < 60) return `${seconds}s`;
+    return `${seconds / 60}m`;
+  };
+
   return (
     <div className="max-w-md mx-auto h-screen flex flex-col pt-12">
       <div className="text-center mb-8">
@@ -16,6 +25,50 @@ const Lobby: React.FC<LobbyProps> = ({ gameState, me, onStart }) => {
       </div>
 
       <div className="flex-1 bg-slate-800 rounded-t-3xl p-6 shadow-2xl overflow-y-auto">
+        {me?.isHost && (
+          <div className="mb-8 space-y-6">
+            <div className="space-y-3">
+              <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider">Discussion Time</h3>
+              <div className="grid grid-cols-3 gap-2">
+                {DISCUSSION_TIMES.map(t => (
+                  <button
+                    key={t}
+                    onClick={() => onUpdateSettings({ discussionTime: t })}
+                    className={`py-2 px-1 rounded-xl text-sm font-bold transition-all ${
+                      gameState.gameSettings.discussionTime === t 
+                        ? 'bg-purple-600 text-white ring-2 ring-purple-400' 
+                        : 'bg-slate-700 text-slate-300 hover:bg-slate-600'
+                    }`}
+                  >
+                    {formatTime(t)}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="space-y-3">
+              <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider">Voting Time</h3>
+              <div className="grid grid-cols-4 gap-2">
+                {VOTING_TIMES.map(t => (
+                  <button
+                    key={t}
+                    onClick={() => onUpdateSettings({ votingTime: t })}
+                    className={`py-2 px-1 rounded-xl text-sm font-bold transition-all ${
+                      gameState.gameSettings.votingTime === t 
+                        ? 'bg-purple-600 text-white ring-2 ring-purple-400' 
+                        : 'bg-slate-700 text-slate-300 hover:bg-slate-600'
+                    }`}
+                  >
+                    {formatTime(t)}
+                  </button>
+                ))}
+              </div>
+            </div>
+            
+            <div className="border-b border-slate-700 pb-4"></div>
+          </div>
+        )}
+
         <div className="flex justify-between items-center mb-6">
           <h3 className="text-xl font-bold">Players ({gameState.players.length})</h3>
           <span className="text-sm text-slate-400">Waiting for host...</span>
