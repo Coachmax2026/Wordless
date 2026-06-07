@@ -5,11 +5,17 @@ import Lobby from './components/Lobby';
 import Game from './components/Game';
 import Vote from './components/Vote';
 import Results from './components/Results';
+import PaymentSuccess from './components/PaymentSuccess';
+import { getUnlockedCategories } from './utils/purchases';
 
 const App: React.FC = () => {
   const [gameState, setGameState] = useState<GameState | null>(null);
   const [playerId, setPlayerId] = useState<string | null>(null);
   const socketRef = useRef<WebSocket | null>(null);
+
+  if (window.location.pathname === '/payment-success') {
+    return <PaymentSuccess />;
+  }
 
   useEffect(() => {
     // Only connect if we have a reason to (e.g. joined a room)
@@ -62,7 +68,11 @@ const App: React.FC = () => {
   };
 
   const startGame = () => {
-    socketRef.current?.send(JSON.stringify({ type: 'START_GAME' }));
+    const categories = getUnlockedCategories();
+    socketRef.current?.send(JSON.stringify({ 
+      type: 'START_GAME',
+      payload: { categories }
+    }));
   };
 
   const submitVote = (votedPlayerId: string) => {

@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 
+import { getUnlockedCategories } from '../utils/purchases';
+
 interface HomeProps {
   onJoin: (roomId: string, name: string, character: string, color: string) => void;
   onCreate: (name: string, character: string, color: string) => void;
@@ -16,11 +18,21 @@ const CHARACTERS = [
   { emoji: '🦁', name: 'Lion', color: '#FFD700' },
 ];
 
+const CATEGORIES = [
+  { name: 'Everyday Things', price: 0, icon: '🏠' },
+  { name: 'Movies & TV', price: 199, icon: '🎬' },
+  { name: 'Food & Drink', price: 199, icon: '🍕' },
+  { name: 'Animals', price: 199, icon: '🦁' },
+];
+
 const Home: React.FC<HomeProps> = ({ onJoin, onCreate }) => {
   const [name, setName] = useState('');
   const [roomId, setRoomId] = useState('');
   const [selectedChar, setSelectedChar] = useState(CHARACTERS[0]);
   const [view, setView] = useState<'main' | 'join' | 'create'>('main');
+  const [loading, setLoading] = useState(false);
+
+  const unlocked = getUnlockedCategories();
 
   const handleAction = (isCreate: boolean) => {
     if (!name) return alert('Please enter your name');
@@ -29,6 +41,29 @@ const Home: React.FC<HomeProps> = ({ onJoin, onCreate }) => {
     } else {
       if (!roomId) return alert('Please enter room code');
       onJoin(roomId, name, selectedChar.emoji, selectedChar.color);
+    }
+  };
+
+  const buyCategory = async (cat: typeof CATEGORIES[0]) => {
+    if (unlocked.includes(cat.name)) return;
+    setLoading(true);
+    try {
+      const res = await fetch('/api/create-checkout-session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ categoryName: cat.name, price: cat.price }),
+      });
+      const data = await res.json();
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        alert('Failed to create checkout session');
+        setLoading(false);
+      }
+    } catch (err) {
+      console.error(err);
+      alert('Error connecting to Stripe');
+      setLoading(false);
     }
   };
 
@@ -99,6 +134,37 @@ const Home: React.FC<HomeProps> = ({ onJoin, onCreate }) => {
                     {char.emoji}
                   </button>
                 ))}
+              </div>
+            </div>
+
+            <div className="space-y-3">
+              <label className="block text-sm font-medium text-slate-400 uppercase tracking-wider">Word Categories</label>
+              <div className="grid grid-cols-2 gap-3">
+                {CATEGORIES.map((cat) => {
+                  const isUnlocked = unlocked.includes(cat.name);
+                  return (
+                    <button
+                      key={cat.name}
+                      onClick={() => !isUnlocked && buyCategory(cat)}
+                      disabled={loading}
+                      className={`flex items-center justify-between p-3 rounded-xl border-2 transition-all ${
+                        isUnlocked 
+                          ? 'border-green-500/50 bg-green-500/10' 
+                          : 'border-slate-700 bg-slate-700/50 hover:border-purple-500'
+                      }`}
+                    >
+                      <div className="flex items-center space-x-2 truncate">
+                        <span className="text-xl">{cat.icon}</span>
+                        <span className="text-xs font-bold truncate">{cat.name}</span>
+                      </div>
+                      {isUnlocked ? (
+                        <span className="text-green-500">✅</span>
+                      ) : (
+                        <span className="text-xs font-bold text-purple-400">$1.99</span>
+                      )}
+                    </button>
+                  );
+                })}
               </div>
             </div>
 

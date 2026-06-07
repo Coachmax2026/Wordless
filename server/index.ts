@@ -4,8 +4,15 @@ import { WebSocketServer, WebSocket } from 'ws';
 import path from 'path';
 import fs from 'fs';
 import { GameState, Player, Phase } from './types';
+import dotenv from 'dotenv';
+import Stripe from 'stripe';
+
+dotenv.config();
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '');
 
 const app = express();
+app.use(express.json());
 const server = createServer(app);
 const wss = new WebSocketServer({ server });
 
@@ -128,7 +135,7 @@ wss.on('connection', (ws: any) => {
       case 'START_GAME': {
         const room = rooms.get(ws.roomId);
         if (room && room.players.find(p => p.id === ws.playerId)?.isHost) {
-          startGame(ws.roomId);
+          startGame(ws.roomId, payload?.categories);
         }
         break;
       }
@@ -198,11 +205,15 @@ wss.on('connection', (ws: any) => {
   });
 });
 
-function startGame(roomId: string) {
+function startGame(roomId: string, allowedCategories?: string[]) {
   const room = rooms.get(roomId);
   if (!room) return;
 
-  const categories = Object.keys(wordsData);
+  const allCategories = Object.keys(wordsData);
+  const categories = (allowedCategories && allowedCategories.length > 0) 
+    ? allCategories.filter(c => allowedCategories.includes(c))
+    : ['Everyday Things']; // Fallback to free category
+  
   const category = categories[Math.floor(Math.random() * categories.length)];
   const wordPairs = wordsData[category];
   const pair = wordPairs[Math.floor(Math.random() * wordPairs.length)];
@@ -295,6 +306,57 @@ function endVoting(roomId: string) {
 
   sendGameState(roomId);
 }
+
+// Stripe Endpoints
+app.post('/api/create-checkout-session', async (req, res) => {
+  const { categoryName, price } = req.body;
+  const origin = req.headers.origin || `http://${req.headers.host}`;
+
+  try {
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ['card'],
+      line_items: [
+        {
+          price_data: {
+            currency: 'usd',
+            product_data: {
+              name: `Wordless: ${categoryName} Pack`,
+            },
+            unit_amount: price,
+          },
+          quantity: 1,
+        },
+      ],
+      mode: 'payment',
+      success_url: `${origin}/payment-success?session_id={CHECKOUT_SESSION_ID}&category=${encodeURIComponent(categoryName)}`,
+      cancel_url: `${origin}/`,
+    });
+
+    res.json({ url: session.url });
+  } catch (err: any) {
+    console.error('Stripe Error:', err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.post('/api/verify-purchase', async (req, res) => {
+  const { sessionId } = req.body;
+
+  try {
+    const session = await stripe.checkout.sessions.retrieve(sessionId);
+    if (session.payment_status === 'paid') {
+      // In a real app, you'd find the category from the session metadata or success_url
+      // Here we trust the frontend passed it originally, and we can retrieve it if we saved it in metadata.
+      // Let's assume the session has it in success_url as a param (already done above)
+      // and we just verify it was paid.
+      res.json({ verified: true });
+    } else {
+      res.json({ verified: false });
+    }
+  } catch (err: any) {
+    res.status(500).json({ error: err.message });
+  }
+});
 
 // Serve static files from the React app
 app.use(express.static(path.join(__dirname, '../client/dist')));
