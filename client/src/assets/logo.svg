@@ -1,0 +1,12 @@
+<svg width="300" height="100" viewBox="0 0 300 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background speech bubble element -->
+  <path d="M20 20C20 8.95431 28.9543 0 40 0H260C271.046 0 280 8.95431 280 20V60C280 71.0457 271.046 80 260 80H100L60 95V80H40C28.9543 80 20 71.0457 20 60V20Z" fill="#ff6b6b" />
+  
+  <!-- Text: Wordless -->
+  <text x="150" y="55" font-family="Nunito, sans-serif" font-size="44" font-weight="900" fill="white" text-anchor="middle">WORDLESS</text>
+  
+  <!-- Decorative dots -->
+  <circle cx="45" cy="25" r="5" fill="#4ecdc4" />
+  <circle cx="255" cy="65" r="8" fill="#f7d794" />
+  <circle cx="275" cy="15" r="4" fill="white" />
+</svg>

@@ -1,0 +1,55 @@
+{
+  "Everyday Things": [
+    ["bicycle", "scooter"],
+    ["pillow", "blanket"],
+    ["mirror", "glass"],
+    ["lamp", "candle"],
+    ["spoon", "fork"],
+    ["towel", "sponge"],
+    ["shelf", "cabinet"],
+    ["backpack", "suitcase"],
+    ["remote", "controller"],
+    ["wallet", "purse"],
+    ["mug", "cup"],
+    ["plant", "flower"],
+    ["clock", "watch"],
+    ["pen", "pencil"],
+    ["chair", "stool"]
+  ],
+  "Movies & TV": [
+    ["popcorn", "nachos"],
+    ["director", "producer"],
+    ["sequel", "prequel"],
+    ["premiere", "finale"],
+    ["script", "novel"],
+    ["blockbuster", "indie"],
+    ["trailer", "teaser"],
+    ["cameo", "guest"],
+    ["thriller", "horror"],
+    ["binge", "marathon"]
+  ],
+  "Food & Drink": [
+    ["pizza", "burger"],
+    ["sushi", "sashimi"],
+    ["taco", "burrito"],
+    ["pasta", "noodles"],
+    ["cupcake", "muffin"],
+    ["latte", "cappuccino"],
+    ["waffle", "pancake"],
+    ["ramen", "udon"],
+    ["cookie", "brownie"],
+    ["steak", "ribs"]
+  ],
+  "Animals": [
+    ["octopus", "squid"],
+    ["flamingo", "stork"],
+    ["penguin", "puffin"],
+    ["chameleon", "lizard"],
+    ["hedgehog", "porcupine"],
+    ["koala", "sloth"],
+    ["parrot", "toucan"],
+    ["dolphin", "whale"],
+    ["squirrel", "chipmunk"],
+    ["peacock", "pheasant"]
+  ]
+}

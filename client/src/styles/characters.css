@@ -1,0 +1,67 @@
+.character-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 20px;
+  padding: 20px;
+  width: 100%;
+}
+
+.character-card {
+  background-color: var(--surface-color);
+  border-radius: var(--border-radius-md);
+  padding: 15px;
+  text-align: center;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  cursor: pointer;
+  border: 2px solid transparent;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.character-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-md);
+}
+
+.character-emoji {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  margin-bottom: 5px;
+}
+
+.character-name {
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+/* Character Specific Styles */
+.char-felix .character-emoji { background-color: #ff922b33; border: 2px solid #ff922b; }
+.char-felix.selected { border-color: #ff922b; box-shadow: 0 0 15px #ff922b66; }
+
+.char-boris .character-emoji { background-color: #8b691433; border: 2px solid #8b6914; }
+.char-boris.selected { border-color: #8b6914; box-shadow: 0 0 15px #8b691466; }
+
+.char-lila .character-emoji { background-color: #f0659533; border: 2px solid #f06595; }
+.char-lila.selected { border-color: #f06595; box-shadow: 0 0 15px #f0659566; }
+
+.char-cleo .character-emoji { background-color: #845ef733; border: 2px solid #845ef7; }
+.char-cleo.selected { border-color: #845ef7; box-shadow: 0 0 15px #845ef766; }
+
+.char-max .character-emoji { background-color: #339af033; border: 2px solid #339af0; }
+.char-max.selected { border-color: #339af0; box-shadow: 0 0 15px #339af066; }
+
+.char-finn .character-emoji { background-color: #20c99733; border: 2px solid #20c997; }
+.char-finn.selected { border-color: #20c997; box-shadow: 0 0 15px #20c99766; }
+
+.char-ping .character-emoji { background-color: #868e9633; border: 2px solid #868e96; }
+.char-ping.selected { border-color: #868e96; box-shadow: 0 0 15px #868e9666; }
+
+.char-leo .character-emoji { background-color: #ffd43b33; border: 2px solid #ffd43b; }
+.char-leo.selected { border-color: #ffd43b; box-shadow: 0 0 15px #ffd43b66; }

@@ -1,0 +1,155 @@
+/* Base Screen Layout */
+.screen {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  max-width: 600px;
+  margin: 0 auto;
+  width: 100%;
+  animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Home Screen */
+.screen-home {
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.home-logo {
+  margin-bottom: 40px;
+  width: 250px;
+  height: auto;
+}
+
+.home-actions {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* Lobby Screen */
+.screen-lobby {
+  justify-content: flex-start;
+}
+
+.lobby-header {
+  margin-bottom: 30px;
+}
+
+.lobby-player-list {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
+  margin-bottom: 40px;
+}
+
+.lobby-footer {
+  margin-top: auto;
+  padding: 20px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* Game Screen */
+.screen-game {
+  justify-content: flex-start;
+}
+
+.game-role-reveal {
+  background: var(--surface-color);
+  padding: 40px 20px;
+  border-radius: var(--border-radius-lg);
+  text-align: center;
+  margin-bottom: 30px;
+  border: 3px solid var(--secondary-color);
+  box-shadow: 0 0 20px rgba(78, 205, 196, 0.3);
+}
+
+.role-title {
+  text-transform: uppercase;
+  font-size: 0.9rem;
+  letter-spacing: 2px;
+  color: var(--text-muted);
+  margin-bottom: 10px;
+}
+
+.role-word {
+  font-size: 2.5rem;
+  font-weight: 900;
+  color: var(--secondary-color);
+  margin: 0;
+}
+
+.game-status {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+/* Vote Screen */
+.screen-vote {
+  text-align: center;
+}
+
+.vote-instruction {
+  font-size: 1.2rem;
+  margin-bottom: 25px;
+}
+
+.vote-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
+  margin-bottom: 30px;
+}
+
+/* Results Screen */
+.screen-results {
+  text-align: center;
+}
+
+.results-winner {
+  font-size: 2.5rem;
+  font-weight: 900;
+  margin-bottom: 10px;
+  color: var(--warning-color);
+}
+
+.results-imposter {
+  font-size: 1.1rem;
+  color: var(--text-muted);
+  margin-bottom: 30px;
+}
+
+.results-breakdown {
+  margin-bottom: 40px;
+  text-align: left;
+}
+
+/* Screen Transitions */
+.slide-enter {
+  opacity: 0;
+  transform: translateX(100%);
+}
+.slide-enter-active {
+  opacity: 1;
+  transform: translateX(0);
+  transition: opacity 300ms, transform 300ms;
+}
+.slide-exit {
+  opacity: 1;
+  transform: translateX(0);
+}
+.slide-exit-active {
+  opacity: 0;
+  transform: translateX(-100%);
+  transition: opacity 300ms, transform 300ms;
+}
