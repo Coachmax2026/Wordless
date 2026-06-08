@@ -93,6 +93,10 @@ const App: React.FC = () => {
     }));
   };
 
+  const skipToVoting = () => {
+    socketRef.current?.send(JSON.stringify({ type: 'SKIP_TO_VOTING' }));
+  };
+
   if (!gameState) {
     return <Home onJoin={(roomId, name, char, color) => connect(roomId, name, char, color, false)} 
                  onCreate={(name, char, color) => connect('', name, char, color, true)} />;
@@ -106,7 +110,7 @@ const App: React.FC = () => {
         <Lobby gameState={gameState} me={me} onStart={startGame} onUpdateSettings={updateSettings} />
       )}
       {gameState.phase === 'discussion' && (
-        <Game gameState={gameState} me={me} />
+        <Game gameState={gameState} me={me} onSkip={skipToVoting} />
       )}
       {gameState.phase === 'voting' && (
         <Vote gameState={gameState} me={me} onVote={submitVote} />

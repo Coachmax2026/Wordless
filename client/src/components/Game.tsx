@@ -5,12 +5,13 @@ import { Timer } from 'lucide-react';
 interface GameProps {
   gameState: GameState;
   me?: Player;
+  onSkip: () => void;
 }
 
-const Game: React.FC<GameProps> = ({ gameState, me }) => {
+const Game: React.FC<GameProps> = ({ gameState, me, onSkip }) => {
   return (
     <div className="max-w-md mx-auto h-screen flex flex-col pt-12 items-center text-center">
-      <div className="mb-12">
+      <div className="mb-8">
         <div className="flex items-center justify-center space-x-2 text-purple-400 mb-2">
           <Timer size={24} />
           <span className="text-2xl font-bold tracking-widest">{gameState.timer}s</span>
@@ -19,6 +20,13 @@ const Game: React.FC<GameProps> = ({ gameState, me }) => {
       </div>
 
       <div className="w-full bg-slate-800 p-8 rounded-3xl shadow-2xl border-2 border-purple-500/30">
+        {me?.isImposter && (
+          <div className="mb-4 animate-pulse">
+            <span className="text-pink-500 font-black text-xl tracking-tight">
+              🕵️ YOU ARE THE IMPOSTER
+            </span>
+          </div>
+        )}
         <p className="text-slate-400 uppercase tracking-widest text-xs font-bold mb-4">Your Secret Word</p>
         <h3 className="text-5xl font-black text-white mb-6">
           {me?.word || '???'}
@@ -35,6 +43,15 @@ const Game: React.FC<GameProps> = ({ gameState, me }) => {
           Discuss with other players without revealing your word directly. Try to figure out who has a different word!
         </p>
       </div>
+
+      {me?.isHost && (
+        <button 
+          onClick={onSkip}
+          className="mt-8 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold py-3 px-6 rounded-xl border border-slate-700 transition-colors flex items-center space-x-2"
+        >
+          <span>⏭ Skip to Voting</span>
+        </button>
+      )}
 
       <div className="mt-12 w-full grid grid-cols-4 gap-4 px-4 opacity-50">
         {gameState.players.map(p => (

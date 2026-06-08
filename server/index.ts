@@ -183,6 +183,17 @@ wss.on('connection', (ws: any) => {
         }
         break;
       }
+
+      case 'SKIP_TO_VOTING': {
+        const room = rooms.get(ws.roomId);
+        if (room && room.phase === 'discussion' && room.players.find(p => p.id === ws.playerId)?.isHost) {
+          room.phase = 'voting';
+          room.timer = room.gameSettings.votingTime;
+          sendGameState(ws.roomId);
+          startVotingTimer(ws.roomId);
+        }
+        break;
+      }
     }
   });
 
